@@ -31,7 +31,7 @@ def init_logging():
 
     # 4. 创建彩色格式器
     formatter = colorlog.ColoredFormatter(
-        fmt='%(log_color)s%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(name)s - %(message)s',
+        fmt='%(log_color)s%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s - %(threadName)s - %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S',
         log_colors={
             'DEBUG': 'cyan',
