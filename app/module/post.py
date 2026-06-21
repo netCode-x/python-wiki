@@ -14,8 +14,8 @@ class Post(Base):
     author_id:Mapped[int]=mapped_column(Integer,ForeignKey("ms_user.id",ondelete="CASCADE"),nullable=False,comment="作者ID")
 
     # 关系绑定
-    author:Mapped["User"]=relationship("User",back_populates="posts")
-    comments:Mapped["Comment"]=relationship("Comment",back_populates="posts",cascade="all,delete-orphan")
+    author:Mapped["User"]=relationship("User",back_populates="post")
+    comments:Mapped["Comment"]=relationship("Comment",back_populates="post",cascade="all,delete-orphan")
 
 
 

@@ -14,8 +14,8 @@ async def get_user(db: AsyncSession, user_id: int):
 
 
 # 根据用户名查找
-async def get_user_by_username(db: AsyncSession, user_name: str):
-    result = await db.execute(select(User).where(User.username == user_name))
+async def get_user_by_username(db: AsyncSession, username: str):
+    result = await db.execute(select(User).where(User.username == username))
     return result.scalars().one_or_none()
 
 # 根据邮箱查找用户

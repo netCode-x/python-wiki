@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,6 +12,8 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 
 @router.post("/register", response_model=schemas.UserResponse)
 async def register(user: schemas.UserCreate, db: AsyncSession = Depends(get_database)):
+    logging.info("收到的密码:", repr(user.password))
+    logging.info("密码字节长度:", len(user.password.encode('utf-8')))
     db_user = await crud.get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")

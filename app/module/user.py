@@ -16,7 +16,7 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False,comment="是否在线")
 
     # 关系
-    posts:Mapped["Post"]=relationship("Post",back_populates="author",cascade="all,delete-orphan")
+    post:Mapped["Post"]=relationship("Post",back_populates="author",cascade="all,delete-orphan")
     comments:Mapped[List["Comment"]]=relationship("Comment",back_populates="author",cascade="all,delete-orphan")
 
 

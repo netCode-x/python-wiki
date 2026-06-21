@@ -12,7 +12,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(...,min_length=6,max_length=20,description="密码长度 6~20 位")
 
 
 class UserLogin(BaseModel):
@@ -72,8 +72,8 @@ class CommentResponse(CommentBase):
     id: int
     author_id: int
     post_id: int
-    created_at: datetime
-    updated_at: Optional[datetime]
+    create_at: datetime
+    update_at: Optional[datetime]
     author: Optional[UserResponse]
 
     class Config:
