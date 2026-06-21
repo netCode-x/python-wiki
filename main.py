@@ -1,34 +1,17 @@
 import logging
 import os
-import time
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.middleware.cors import CORSMiddleware
 import uvicorn
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 from app.config.baseConfig import init_logging, settings
 from app.config.redisConfig import get_redis
 from app.db.database import Base, async_engine
 from app.routes import users
+from app.utils.logingMiddleware import RequestLogMiddleware
 
 # 关闭 SQLAlchemy 详细日志
 logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
-
-
-# ---------- 自定义请求日志中间件（记录详细信息） ----------
-class RequestLogMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        start_time = time.time()
-        forwarded = request.headers.get("X-Forwarded-For")
-        client_ip = forwarded.split(",")[0].strip() if forwarded else request.client.host
-        response = await call_next(request)
-        process_time = time.time() - start_time
-        user_agent = request.headers.get("User-Agent", "-")
-        logging.info(
-            f'{client_ip} - "{request.method} {request.url.path}" {response.status_code} '
-            f'{process_time:.3f}s - "{user_agent}"'
-        )
-        return response
 
 
 # ---------- 生命周期管理 ----------
@@ -64,7 +47,7 @@ app.add_middleware(
 )
 
 # 请求日志中间件（添加在路由之前，记录所有请求）
-app.add_middleware(RequestLogMiddleware)
+#app.add_middleware(RequestLogMiddleware)
 
 # 注册路由
 app.include_router(users.router)

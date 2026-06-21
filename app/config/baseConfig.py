@@ -7,6 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 # ---------- 日志和环境配置 ----------
 _logging_initialized = False
 
+
 def init_logging():
     global _logging_initialized
     if _logging_initialized:
@@ -52,6 +53,7 @@ merged_env = {**base_env, **env_specific}
 for key, value in merged_env.items():
     if key not in os.environ:
         os.environ[key] = value
+
 
 # ---------- Pydantic Settings ----------
 class Settings(BaseSettings):

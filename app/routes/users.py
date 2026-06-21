@@ -27,6 +27,7 @@ async def register(user: schemas.UserCreate, db: AsyncSession = Depends(get_data
 async def login(user: schemas.UserLogin, db: AsyncSession = Depends(get_database)):
     db_user = await crud.get_user_by_username(db, username=user.username)
     if not db_user or not verify_password(user.password, db_user.hashed_password):
+        logging.info(f"Incorrect username or password")
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     access_token = authConfig.create_access_token(data={"sub": db_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
