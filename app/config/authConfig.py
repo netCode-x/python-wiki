@@ -3,7 +3,6 @@ from typing import Optional
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
-from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.config.baseConfig import settings
 from app.crud import crud

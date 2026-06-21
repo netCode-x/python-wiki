@@ -1,18 +1,59 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+import logging
+import os
 from pathlib import Path
+from dotenv import load_dotenv, dotenv_values
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-def find_env_file(start_path: Path) -> Path:
-    # 从当前目录开始，向上逐级查找
+# ---------- 日志和环境配置 ----------
+_logging_initialized = False
+
+def init_logging():
+    global _logging_initialized
+    if _logging_initialized:
+        return
+
+    # 1. 加载 .env 文件
+    env_file = os.getenv("ENV_FILE", ".env.dev")
+    load_dotenv(env_file)
+
+    # 2. 配置日志格式（加入文件名和函数名，便于定位）
+    log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+    logging.basicConfig(
+        level=getattr(logging, log_level, logging.INFO),
+        format='%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(name)s - %(message)s'
+    )
+    logging.info(f"加载环境配置: {env_file}")
+    logging.info("配置加载完成")
+    _logging_initialized = True
+
+
+# ---------- 查找项目根目录 ----------
+def find_project_root(start_path: Path) -> Path:
     for parent in [start_path] + list(start_path.parents):
-        env_path = parent / ".env"
-        if env_path.exists():
-            return env_path
-    raise FileNotFoundError(".env not found")
-
-# 使用示例
-BASE_DIR = find_env_file(Path(__file__).resolve()).parent
+        if (parent / ".env").exists():
+            return parent
+    raise FileNotFoundError("未找到 .env 文件，请确保项目根目录下存在 .env")
 
 
+BASE_DIR = find_project_root(Path(__file__).resolve().parent)
+
+# ---------- 合并环境配置（支持多环境） ----------
+base_env = dotenv_values(BASE_DIR / ".env")
+app_env = os.getenv("APP_ENV")
+env_specific = {}
+if app_env:
+    env_file = BASE_DIR / f".env.{app_env}"
+    if env_file.exists():
+        env_specific = dotenv_values(env_file)
+    else:
+        logging.warning(f"环境文件 {env_file} 不存在，仅使用基础配置 .env")
+
+merged_env = {**base_env, **env_specific}
+for key, value in merged_env.items():
+    if key not in os.environ:
+        os.environ[key] = value
+
+# ---------- Pydantic Settings ----------
 class Settings(BaseSettings):
     DB_HOST: str
     DB_PORT: int
@@ -20,19 +61,19 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_NAME: str
 
-    # Redis 配置
     REDIS_HOST: str
     REDIS_PORT: int
     REDIS_DB: int
     REDIS_USERNAME: str
     REDIS_PASSWORD: str
 
-    # JWT 配置
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int
 
-    # 在 Pydantic v2 / pydantic-settings 最新版中，官方推荐使用 model_config
-    model_config = SettingsConfigDict(env_file=str(BASE_DIR / ".env"))
+    PORT: int = 8000
+
+    model_config = SettingsConfigDict(extra="ignore")
+
 
 settings = Settings()

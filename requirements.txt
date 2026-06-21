@@ -5,9 +5,11 @@ aiomysql==0.2.0                # 替代 asyncmy（或使用 asyncmy==0.2.9）
 redis==5.0.7                   # 最新稳定版
 python-jose[cryptography]==3.3.0
 passlib==1.7.4                 # 注意：不是 passlib[bcrypt]==3.2.0
-bcrypt==4.1.3                  # 与 passlib 1.7.4 兼容
+bcrypt==3.2.2              # 与 passlib 1.7.4 兼容
 python-multipart==0.0.9
 pydantic==2.8.2                # Pydantic v2 最新
 pydantic-settings==2.4.0
 pydantic[email]==2.8.2         # 包含 email-validator
 aioredis==2.0.1                # 如果使用 redis 库的异步，可移除
+
+python-dotenv

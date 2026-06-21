@@ -12,7 +12,7 @@ SQLALCHEMY_DATABASE_URL = (
 # 创建异步数据库引擎（负责管理连接池和底层通信）
 async_engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL,
-    echo=True,                # 开启 SQL 日志输出（开发调试用，生产环境建议设为 False）
+    echo=False,                # 开启 SQL 日志输出（开发调试用，生产环境建议设为 False）
     pool_size=10,             # 连接池中保持的活跃连接数（常驻）
     max_overflow=20           # 当活跃连接用尽时，允许额外创建的连接数上限（超出后会阻塞等待）
 )

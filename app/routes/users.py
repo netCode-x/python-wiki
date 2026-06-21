@@ -7,6 +7,7 @@ from app.config import authConfig
 from app.crud import crud
 from app.db.database import get_database
 from app.schemas import schemas
+from app.utils.security import verify_password
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
@@ -25,7 +26,7 @@ async def register(user: schemas.UserCreate, db: AsyncSession = Depends(get_data
 @router.post("/login", response_model=schemas.Token)
 async def login(user: schemas.UserLogin, db: AsyncSession = Depends(get_database)):
     db_user = await crud.get_user_by_username(db, username=user.username)
-    if not db_user or not authConfig.verify_password(user.password, db_user.hashed_password):
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     access_token = authConfig.create_access_token(data={"sub": db_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
