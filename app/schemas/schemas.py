@@ -24,7 +24,7 @@ class UserResponse(UserBase):
     id: int
     is_active: bool
     create_at: datetime
-    updated_at: Optional[datetime]
+    update_at: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -51,8 +51,8 @@ class PostUpdate(BaseModel):
 class PostResponse(PostBase):
     id: int
     author_id: int
-    created_at: datetime
-    updated_at: Optional[datetime]
+    create_at: datetime
+    update_at: Optional[datetime]
     author: Optional[UserResponse]  # 嵌套用户信息
 
     class Config:
