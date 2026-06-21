@@ -11,5 +11,5 @@ pydantic==2.8.2                # Pydantic v2 最新
 pydantic-settings==2.4.0
 pydantic[email]==2.8.2         # 包含 email-validator
 aioredis==2.0.1                # 如果使用 redis 库的异步，可移除
-
+colorlog==6.10.1
 python-dotenv

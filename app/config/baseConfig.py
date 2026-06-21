@@ -1,4 +1,5 @@
 import logging
+import colorlog  # 需要先安装
 import os
 from pathlib import Path
 from dotenv import load_dotenv, dotenv_values
@@ -6,7 +7,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # ---------- 日志和环境配置 ----------
 _logging_initialized = False
-
 
 def init_logging():
     global _logging_initialized
@@ -17,16 +17,41 @@ def init_logging():
     env_file = os.getenv("ENV_FILE", ".env.dev")
     load_dotenv(env_file)
 
-    # 2. 配置日志格式（加入文件名和函数名，便于定位）
+    # 2. 获取日志级别
     log_level = os.getenv("LOG_LEVEL", "INFO").upper()
-    logging.basicConfig(
-        level=getattr(logging, log_level, logging.INFO),
-        format='%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(name)s - %(message)s'
+    level = getattr(logging, log_level, logging.INFO)
+
+    # 3. 配置根日志记录器
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level)
+
+    # 清除已有的处理器（避免重复）
+    if root_logger.handlers:
+        root_logger.handlers.clear()
+
+    # 4. 创建彩色格式器
+    formatter = colorlog.ColoredFormatter(
+        fmt='%(log_color)s%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(name)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S',
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red,bg_white',
+        }
     )
+
+    # 5. 添加控制台处理器
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    root_logger.addHandler(handler)
+
+    # 6. 输出启动信息
     logging.info(f"加载环境配置: {env_file}")
     logging.info("配置加载完成")
-    _logging_initialized = True
 
+    _logging_initialized = True
 
 # ---------- 查找项目根目录 ----------
 def find_project_root(start_path: Path) -> Path:
