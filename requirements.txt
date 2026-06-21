@@ -1,11 +1,12 @@
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-sqlalchemy[asyncio]==2.0.36     #
-aiomysql==0.2.0         #  异步数据库驱动
-pymysql==1.1.1          # 用于同步迁移工具
-alembic==1.14.1
-python-dotenv==1.0.1
-passlib[bcrypt]==1.7.4
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+sqlalchemy==2.0.23          # 支持异步
+asyncmy==0.2.9              # 或 aiomysql
+redis==5.0.1
 python-jose[cryptography]==3.3.0
-pydantic-settings==2.6.1
-datetime
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+pydantic==2.5.0
+pydantic-settings==2.1.0
+aioredis==2.0.1
+pydantic[email]=3.18

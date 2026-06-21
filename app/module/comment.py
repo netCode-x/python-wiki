@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, Text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.Database import Base
+from app.db.database import Base
 
 
 class Comment(Base):
@@ -9,8 +9,8 @@ class Comment(Base):
 
     id:Mapped[int]=mapped_column(Integer,primary_key=True,index=True,comment="评论ID")
     content:Mapped[Text]=mapped_column(Text,nullable=False,comment="评论内容")
-    author_id:Mapped[int]=mapped_column(Integer,ForeignKey("users.id",ondelete="CASCADE"),nullable=False,comment="作者ID")
-    post_id:Mapped[int]=mapped_column(Integer,ForeignKey("posts.id",ondelete="CASCADE"),nullable=False,comment="postID")
+    author_id:Mapped[int]=mapped_column(Integer,ForeignKey("ms_user.id",ondelete="CASCADE"),nullable=False,comment="作者ID")
+    post_id:Mapped[int]=mapped_column(Integer,ForeignKey("ms_posts.id",ondelete="CASCADE"),nullable=False,comment="postID")
 
      #  关系，告诉 SQLAlchemy 这两个关系是双向配对的。
      #  它让 ORM 知道当通过一端修改关系时，

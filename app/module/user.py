@@ -1,9 +1,9 @@
-from _ast import List
+from typing import List, Optional  # 确保 List 包含在内
 
 from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.Database import Base
+from app.db.database import Base
 
 
 class User(Base):

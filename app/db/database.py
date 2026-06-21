@@ -2,11 +2,11 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from datetime import datetime
 from sqlalchemy import DateTime, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from app.config.BaseConfig import settings
+from app.config.baseConfig import settings
 
 # 数据库连接字符串 url
 SQLALCHEMY_DATABASE_URL = (
-    f"mysql+pymysql://{settings.DB_USER}:{settings.DB_PASSWORD}"
+    f"mysql+aiomysql://{settings.DB_USER}:{settings.DB_PASSWORD}"
     f"@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}?charset=utf8mb4"
 )
 # 创建异步数据库引擎（负责管理连接池和底层通信）
@@ -27,8 +27,8 @@ AsyncSessionLocal = async_sessionmaker(
 
 # 定义模型基类（存放通用属性）
 class Base(DeclarativeBase):
-    create_time: Mapped[datetime]= mapped_column(DateTime,insert_default=func.now(),default=func.now,comment="创建时间")
-    update_time: Mapped[datetime]= mapped_column(DateTime,insert_default=func.now(),default=func.now,comment="更新时间")
+    create_at: Mapped[datetime]= mapped_column(DateTime,insert_default=func.now(),default=func.now,comment="创建时间")
+    update_at: Mapped[datetime]= mapped_column(DateTime,insert_default=func.now(),default=func.now,comment="更新时间")
 
 
 # 定义异步依赖项函数（通常用于 FastAPI 等框架的依赖注入）
